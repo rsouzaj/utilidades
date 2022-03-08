@@ -89,3 +89,25 @@ banco %>%
 
 ggsave("Figure_1_leg.jpg", width = 20, height = 14, units = c("cm"), dpi =300)
 
+
+
+# geom_col AND percents ---------------------------------------------------
+
+banco %>%
+  group_by(int_dor_pelve, isi_cat_4) %>%
+  summarise(n = n()) %>%
+  mutate(perc =round( n*100/sum(n), digits = 1)) %>%
+  ggplot(aes(x = int_dor_pelve, y = perc, fill = isi_cat_4))+
+  geom_col(position = "dodge")+
+  geom_text(aes( label = paste0(perc, "%")), vjust = -.6, size =4.5,
+            position = position_dodge(width = .9))+
+  labs(
+    tag = "Figure 2",
+    y = "Relative frequencies (%)",
+    x = "Pelvic pain",
+    fill = "Insomnia severity"
+  )+
+  scale_fill_brewer(palette = "Paired")+
+  theme_classic()+
+  theme(legend.position = "top")
+
