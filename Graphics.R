@@ -1,4 +1,10 @@
 
+# library(tidyverse)
+# install.packages("patchwork")
+# library(patchwork)  -> pacote que arruma os gráficos em um mesmo plot. Pode pôr mais de um.
+                        # g1 + g2 + g3...
+
+
 # scaled-plots ------------------------------------------------------------
 
 
