@@ -1,0 +1,229 @@
+
+# Criando variÃ¡veis de interesse ------------------------------------------
+
+pitt_table <- df_8
+
+
+# Componente 1 - comp1 ----------------------------------------------------
+
+## (qualidade subjetiva do sono) = pittsburg_q16 (Como vocÃª classificaria sua qualidade do
+## sono de uma maneira geral?)
+
+pitt_table <- pitt_table %>% 
+  mutate(comp1 = pittsburgh_q16)
+
+
+# Componente 2 - comp2 -----------------------------------------------------
+
+# Componente 2 (latÃªncia do sono) = soma de (escore  pittsburg_q2) com 
+#                                   pittsburg_q5( nÃ£o conseguiu dormir atÃ© 30 min)
+
+# Quando a soma for:
+#   tempo            escore
+# menor que 16 min =   0
+# 16-30 min        =   1
+# 31-60 min        =   2
+# >60              =   3
+
+#
+# resultado anterior com  + pittsburgh_q5
+
+# pittsburgh_q5
+# 0 =	Nenhuma no Ãºltimo mÃªs
+# 1	= Menos de 1 vez/ semana
+# 2	= 1 ou 2 vezes/ semana
+# 3	= 3 ou mais vezes/ semana
+
+#Soma (escore pittsburgh_q2) com pittsburgh_q5
+# Valor       escore (componente 2)
+# 0          0
+# 1-2        1
+# 3-4        2
+# 5-6        3
+
+pitt_table <- pitt_table %>% 
+  mutate(comp2 = case_when(
+    pittsburgh_q2 <= 15 ~ 0,
+    pittsburgh_q2 > 15 & pittsburgh_q2 <= 30 ~ 1,
+    pittsburgh_q2 >= 31 & pittsburgh_q2 <= 60 ~ 2,
+    pittsburgh_q2 > 60 ~ 3
+  ),
+  comp2 = comp2 + pittsburgh_q5,
+  comp2 = case_when(
+    comp2 == 0 ~ 0,
+    comp2 >= 1 & comp2 <=2 ~ 1,
+    comp2 >= 3 & comp2 <= 4 ~ 2,
+    comp2 >= 5 & comp2 <= 6 ~ 3
+  )
+  )
+
+# Componente 3 - duraÃ§Ã£o do sono - comp3 ----------------------------------
+
+# componente 3 (duraÃ§Ã£o do sono em horas de sono)= pittsburg_q4
+# tempo      escore
+# >7           0
+# 6-7          1
+# 5-6          2
+# <5           3
+
+pitt_table <- pitt_table %>% 
+  mutate(comp3 = case_when(
+    pittsburgh_q4 >  7 ~ 0,
+    pittsburgh_q4 >= 6 & pittsburgh_q4 <= 7 ~ 1,
+    pittsburgh_q4 >= 5 & pittsburgh_q4 <= 6 ~ 2,
+    pittsburgh_q4 <  5 ~ 3
+  ))
+
+
+# Componente 4 - eficiÃªncia do sono - comp4 -------------------------------
+
+## RelaÃ§Ã£o entre as horas de sono e o tempo que se passa na cama
+
+#  (pittsburg_q4/(pittsburg_q3 - pittsburg_q1))*100 = ___%
+
+# Tempo de sono (pitt_q4 pelo tempo que passa deitado (pitt_q3 - pitt_q1), em porcentagem)
+
+##  eficiÃªncia do sono
+# Valores     escore (componente 4)
+#  >85%         0
+# 75-84%        1
+# 65-74%        2
+# <65%          3
+
+pitt_table <- pitt_table %>% ## opÃ§Ã£o usando o pacote lubridate(), fica mais elegante
+  mutate(
+    pittsburgh_q1   = lubridate::as_datetime(pittsburgh_q1),
+    pittsburgh_q3   = lubridate::as_datetime(pittsburgh_q3),
+    overnight       = pittsburgh_q3 < pittsburgh_q1, ## cria um funÃ§Ã£o boleana (TRUE vs FALSE). 
+    
+    pittsburgh_q3   = pittsburgh_q3 + lubridate::hours(overnight*24),
+    ## se overnight = TRUE, acrescenta 24 hs.
+    comp4           = as.numeric(pittsburgh_q3 - pittsburgh_q1),
+    comp4           = (pittsburgh_q4/comp4)*100, ### porcentagem da eficiÃªncia do sono.
+    comp4           = case_when(
+      comp4 >   85 ~ 0,
+      comp4 >=  75 & comp4 <= 84 ~ 1,
+      comp4 >=  65 & comp4 < 75 ~ 2,
+      comp4 <   65 ~ 3)
+  )
+
+
+### Mulheres muito "eficientes" no sono: acima de 100% de eficiÃªncia - efi_100
+# pitt_table %>%
+#   mutate(
+#     pittsburgh_q1   = lubridate::as_datetime(pittsburgh_q1),
+#     pittsburgh_q3   = lubridate::as_datetime(pittsburgh_q3),
+#     overnight       = pittsburgh_q3 < pittsburgh_q1, ## cria um funÃ§Ã£o boleana.
+#     
+#     pittsburgh_q3   = pittsburgh_q3 + lubridate::hours(overnight*24),
+#     ## se overnight = TRUE, acrescenta 24 hs.
+#     efi_100           = as.numeric(pittsburgh_q3 - pittsburgh_q1),
+#     efi_100           = round((pittsburgh_q4/efi_100)*100)) %>%
+#   filter(efi_100 > 100) -> efi_100_table
+
+
+
+# Componente 5 - distÃºrbios do sono - comp5 -------------------------------
+
+# Soma pittsburg_q6 a pittsburg_q15
+# Valores     escore
+#  0           0
+# 1-9          1
+# 10-18        2
+# 19-27        3
+
+pitt_table <- pitt_table %>%
+  rowwise() %>% 
+  mutate(
+    comp5 = sum(c_across(pittsburgh_q6 : pittsburgh_q13), pittsburgh_q15, na.rm = T),
+    comp5 = case_when(
+      comp5 == 0 ~ 0,
+      comp5 >= 1  & comp5 < 10 ~ 1,
+      comp5 >= 10 & comp5 < 19 ~ 2,
+      comp5 >= 19 ~ 3 )
+  )
+
+
+
+# Componente 6 - uso de medicaÃ§Ã£o - comp6 ---------------------------------
+
+pitt_table <- mutate(pitt_table, comp6 = pittsburgh_q17)          
+
+
+
+# Componente 7 - funÃ§Ã£o diurna - comp7 ------------------------------------
+
+# soma pittsburg_q18 + pittsburg_q19
+# Valor     escore
+# 0          0
+# 1-2        1
+# 3-4        2
+# 5-6        3
+
+pitt_table <-  pitt_table %>% 
+  mutate(comp7 = pittsburgh_q18 + pittsburgh_q19,
+         comp7 = case_when(
+           comp7 == 0 ~ 0,
+           comp7>= 1 & comp7 <= 2 ~ 1,
+           comp7>= 3 & comp7 <= 4 ~ 2,
+           comp7>= 5 ~ 3)
+  )
+
+
+# Escore global - pitt_escore ---------------------------------------------
+
+
+pitt_table %>% 
+  mutate(
+    pitt_escore = sum(c_across(comp1 : comp7), na.rm = T)
+  ) -> pitt_table
+
+
+# Categorias qualidade do sono (boa ou ruim) ------------------------------
+
+
+pitt_table <- pitt_table %>% 
+  mutate(pitt_cat = ifelse(pitt_escore > 5, 'Poor sleep', 'Good sleep'))
+
+
+
+
+# Qualidade do sono por componente -----------------------------------
+
+pitt_table %>% 
+  mutate(comp1_cat       = case_when(pittsburgh_q16 == 0 ~ "Very good",
+                                     pittsburgh_q16 == 1 ~ "Fairly good",
+                                     pittsburgh_q16 == 2 ~ "Fairly Bad",
+                                     pittsburgh_q16 == 3 ~ "Very bad"),
+         comp2_cat      = case_when(comp2 == 0 ~ "Very good",
+                                    comp2 == 1 ~ "Good",
+                                    comp2 == 2 ~ "Bad",
+                                    comp2 == 3 ~ "Very bad"),
+         comp3_cat      = case_when(comp3 == 0 ~ "> 7",
+                                    comp3 == 1 ~ "6-7",
+                                    comp3 == 2 ~ "5-6",
+                                    comp3 == 3 ~ "<5"),
+         comp4_cat      = case_when(comp4 == 0 ~ ">85%",
+                                    comp4 == 1 ~ "75-84%",
+                                    comp4 == 2 ~ "65-74%",
+                                    comp4 == 3 ~ "<65%"),
+         comp5_cat     = case_when(comp5 == 0 ~ "No disturbance",
+                                   comp5 == 1 ~ "Mild disturbance",
+                                   comp5 == 2 ~ "Moderate disturbance",
+                                   comp5 == 3 ~ "Severe disturbance"),
+         comp6_cat     = case_when(comp6 == 0 ~ "No use",
+                                   comp6 == 1 ~ "< once/week",
+                                   comp6 == 2 ~ "Once/twice week",
+                                   comp6 == 3 ~ "> 3 times/week"),
+         comp7_cat     = case_when(comp7 == 0 ~ "No problem",
+                                   comp7 == 1 ~ "Slight problem",
+                                   comp7 == 2 ~ "Somewhat a problem",
+                                   comp7 == 3 ~ "Very big problem")
+  ) -> pitt_table
+
+
+# Hmisc::label(pitt_table$comp1_cat) = "Subjective sleep quality"
+# Tabela final ------------------------------------------------------------
+
+pitt_tb <- pitt_table %>% 
+  select(record_id,  pitt_escore: comp7_cat)
