@@ -1,0 +1,4 @@
+
+list(df_1, df_2, df_5, df_6, df_7, df_8, df_9) %>% 
+  purrr::reduce(left_join, by = "record_id") %>% 
+  filter(!is.na(ole_cat))-> banco 
