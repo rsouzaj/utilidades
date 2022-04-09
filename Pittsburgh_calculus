@@ -101,8 +101,8 @@ pitt_table <- pitt_table %>% ## opÃ§Ã£o usando o pacote lubridate(), fica ma
     comp4           = as.numeric(pittsburgh_q3 - pittsburgh_q1),
     comp4           = (pittsburgh_q4/comp4)*100, ### porcentagem da eficiÃªncia do sono.
     comp4           = case_when(
-      comp4 >   85 ~ 0,
-      comp4 >=  75 & comp4 <= 84 ~ 1,
+      comp4 >=  85 ~ 0,
+      comp4 >=  75 & comp4 < 85 ~ 1,
       comp4 >=  65 & comp4 < 75 ~ 2,
       comp4 <   65 ~ 3)
   )
