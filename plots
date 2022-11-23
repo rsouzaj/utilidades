@@ -1,0 +1,20 @@
+
+## Plot stats (mean, median) in a boxplot
+
+df %>%
+  group_by(pelvic_pain_2, pbs_cat) %>%
+  summarise(pitt = pitt_score) %>%
+  ungroup() %>%
+  ggplot(aes(pelvic_pain_2, pitt, fill = pbs_cat)) +
+  geom_boxplot(position = 'dodge') +
+  stat_summary(
+    fun = 'median',
+    geom = 'text',
+    aes(label = paste0("Median = ", ..y..)),
+    position = position_dodge(width = 0.8),
+    vjust = -0.8,
+    size = 4.5
+  )
+
+               
+               
