@@ -1,0 +1,11 @@
+# Modify_at
+
+fun_per <- function(x){
+  x = dplyr::if_else(x<=1, (x*100), x)
+  }
+
+
+df_1 <- df %>% 
+  purrr::modify_at(c(3:8), fun_per)
+  
+  
