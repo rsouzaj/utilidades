@@ -10,10 +10,21 @@ df %>%
   stat_summary(
     fun = 'median',
     geom = 'text',
-    aes(label = paste0("Median = ", ..y..)),
-    position = position_dodge(width = 0.8),
-    vjust = -0.8,
-    size = 4.5
+    # colour = 'red',
+        aes(label = paste0("Median = ", after_stat(y))),
+    position = position_dodge(width = 0.75),
+    vjust = -0.5,
+    size = 3.7
+  )+
+  theme_classic()+
+  # scale_fill_brewer(palette = "Paired")+                                            # Colour options
+  # scale_fill_brewer(palette = "BdGy")+  # "Dark2"; "Set2"; "Greys"; "Oranges"
+  scale_fill_manual(values = c(20724, 106))+
+  labs(
+    y = "Pittsburgh score",
+    x = "Chronic Pelvic Pain",
+    fill = "",
+    size = 4
   )
 
                
