@@ -1,4 +1,8 @@
 
+# Save high resolution plot
+
+ggsave('fig_1.jpg', dpi = 300)
+
 ## Plot stats (mean, median) in a boxplot
 
 df %>%
@@ -27,4 +31,37 @@ df %>%
   )
 
                
-               
+ ###  Violin
+ 
+ 
+df %>%
+  group_by(pelvic_pain_2, pbs_cat) %>%
+  summarise(pitt = pitt_score) %>%
+  ungroup() %>%
+  ggplot(aes(pelvic_pain_2, pitt, group = interaction(pelvic_pain_2, pbs_cat))) +
+  geom_violin(
+    position = 'dodge',
+    aes(fill = pbs_cat,),
+    alpha = 0.5,
+    width = 1
+  ) +
+  geom_boxplot(position = position_dodge(1),
+               width = 0.33,
+               fill = "white") +
+  stat_summary(
+    fun = 'median',
+    geom = 'text',
+    # colour = 'red',
+    aes(label = paste0("Median = ", after_stat(y))),
+    position = position_dodge(width = 1),
+    vjust = -1.5,
+    size = 3.5
+  ) +
+  theme_classic() +
+  theme(legend.position = 'top') +
+  scale_fill_manual(values = c(20724, 106)) +
+  labs(y = "PSQI score",
+       x = "Chronic Pelvic Pain",
+       fill = "",
+       size = 4) +
+  scale_fill_manual(values = c("#1d7874", "#f58c80"))
