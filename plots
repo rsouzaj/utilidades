@@ -6,22 +6,21 @@ df %>%
   summarise(pitt = pitt_score) %>%
   ungroup() %>%
   ggplot(aes(pelvic_pain_2, pitt, fill = pbs_cat)) +
-  geom_boxplot(position = 'dodge') +
+  geom_boxplot(position = 'dodge', width = 0.7, alpha = 0.5) +
   stat_summary(
     fun = 'median',
     geom = 'text',
     # colour = 'red',
         aes(label = paste0("Median = ", after_stat(y))),
-    position = position_dodge(width = 0.75),
+    position = position_dodge(width = 0.7),
     vjust = -0.5,
-    size = 3.7
+    size = 3.1
   )+
   theme_classic()+
-  # scale_fill_brewer(palette = "Paired")+                                            # Colour options
   # scale_fill_brewer(palette = "BdGy")+  # "Dark2"; "Set2"; "Greys"; "Oranges"
   scale_fill_manual(values = c(20724, 106))+
   labs(
-    y = "Pittsburgh score",
+    y = "PSQI score",
     x = "Chronic Pelvic Pain",
     fill = "",
     size = 4
