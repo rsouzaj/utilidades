@@ -1,0 +1,10 @@
+library(rms)
+
+# ORDERED LOGISTIC REGRESSION
+
+ddist<- datadist(men,urban,private,marital_M,marital_O,age,seniority)
+options(datadist='ddist')
+ologit<- lrm(yord ~ men+urban+private+marital_M+marital_O+age+seniority, data=Fullcov, na.action=na.pass)
+print(ologit)
+options(digits=3)
+round(exp(ologit$coefficients),3)
