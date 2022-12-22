@@ -1,0 +1,13 @@
+# Describe numeric variables in a DF
+
+desc_num <- function(df, group, dv){
+  library(dplyr)
+  
+  df %>%
+    group_by({{group}})%>%     # change to '.by' in summarise
+    summarise(Mean = mean({{dv}}),
+              SD = sd({{dv}}),
+              MIN = min({{dv}}),
+              MAX = max({{dv}})
+              )
+    }          
