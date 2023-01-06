@@ -11,3 +11,12 @@ desc_num <- function(df, group, dv){
               MAX = max({{dv}})
               )
     }          
+
+
+
+# Cut by an especific bin
+
+my_cut_fun <- function(x){
+  cut(x, breaks = seq(min(x, na.rm=T), max(x, na.rm=T)+2, by = 3), 
+      include.lowest = T, right  = F, ordered_result = T)
+}
