@@ -1,3 +1,8 @@
 z  %>% 
 arrange(x)  %>% 
 mutate(cat_bin = cut(x, breaks= c(seq(min(x), max(x)+1, by=3)), include.lowest = T, right = TRUE))
+
+my_cut_fun <- function(x){
+  cut(x, breaks = seq(min(x, na.rm=T), max(x, na.rm=T)+2, by = 3), 
+      include.lowest = T, right  = F, ordered_result = T)
+}
