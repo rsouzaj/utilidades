@@ -1,0 +1,3 @@
+z  %>% 
+arrange(x)  %>% 
+mutate(cat_bin = cut(x, breaks= c(seq(min(x), max(x)+1, by=3)), include.lowest = T, right = TRUE))
