@@ -65,3 +65,65 @@ df %>%
        fill = "",
        size = 4) +
   scale_fill_manual(values = c("#1d7874", "#f58c80"))
+  
+  
+  
+  # Multiples bar plots with text
+  
+  df_fim %>%
+  filter(!is.na(tipo_inc)& anterior == 'Sim') %>%
+  mutate(anterior = " ") %>%
+  ggplot(aes(anterior, fill = tipo_inc)) +
+  geom_bar(position = 'dodge')+
+  geom_text(stat = 'count', position = position_dodge(width = .9),
+            vjust= -.7,
+            aes( label=after_stat(count))) +
+  labs(
+    fill = 'Tipo de incontinência',
+    x = "Prolapso anterior",
+    y="Número de mulheres"
+  )+
+  theme_classic()+
+  theme(legend.position = 'none')-> anterior
+
+
+df_fim %>%
+  filter(!is.na(tipo_inc)& posterior == 'Sim') %>%
+  mutate(posterior = " ") %>%
+  ggplot(aes(posterior, fill = tipo_inc)) +
+  geom_bar(position = 'dodge')+
+  geom_text(stat = 'count', position = position_dodge(width = .9),
+            vjust= -.7,
+            aes( label=after_stat(count))) +
+  ylim(0,43)+
+  labs(
+    fill = "Tipo de incontinência",
+    x = "Prolapso posterior",
+    y=" "
+  )+
+  theme_classic()+
+  theme( axis.text.y=element_blank(),
+        axis.ticks = element_blank())-> posterior
+
+df_fim %>%
+  filter(!is.na(tipo_inc)& apical == 'Sim') %>%
+  mutate(apical = " ") %>%
+  ggplot(aes(apical, fill = tipo_inc)) +
+  geom_bar(position = 'dodge')+
+  geom_text(stat = 'count', position = position_dodge(width = .9),
+            vjust= -.7,
+            aes( label=after_stat(count))) +
+  ylim(0,43)+
+  labs(
+    fill = ' ',
+    x = "Prolapso apical",
+    y=" "
+  )+
+  theme_classic()+
+  theme(legend.position = 'none', axis.text.y=element_blank(),
+        axis.ticks = element_blank())-> apical
+
+library(patchwork)
+
+anterior+apical+posterior
+
