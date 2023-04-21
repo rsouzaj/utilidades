@@ -1,7 +1,7 @@
 
 # Save high resolution plot
 
-ggsave('fig_1.jpg', dpi = 300)
+ggsave('fig_1.jpg', plot= last_plot(),  dpi = 300)
 
 ## Plot stats (mean, median) in a boxplot
 
