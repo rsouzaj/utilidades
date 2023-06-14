@@ -127,3 +127,24 @@ library(patchwork)
 
 anterior+apical+posterior
 
+# Inserting text in a plot 
+geom_text(
+    aes(
+      label = paste0(
+        'R = ',
+        cor_p_i,
+        '[CI 95% = ',
+        ci_1,        # a calculated value from mutate
+        ' \u2013 ',  # Unicode for en dash
+                        # em dash: `\u2014`
+                        # en dash: `\u2013`
+        ci_2,
+        ']',
+        '; p-value < 0.001'
+      )
+    ),
+    x = 1.5,
+    y = -1.7,
+    size = 5,
+    family = "sans"
+  ) 
