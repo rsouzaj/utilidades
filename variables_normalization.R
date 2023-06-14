@@ -1,7 +1,7 @@
 # Normalizar variáveis ----------------------------------------------------
 
 ## Log scale (Não funciona com números negativos ou caso tenha ZEROS)
-## pode usar um truque: adicionar uma constante a todosos números, o menor núrero da escala +1)
+## pode usar um truque: adicionar uma constante a todos os números, o menor núrero da escala +1)
 ##  exemplo: nesse caso, menor número é ZERO, então 0 + 1 = 1)
 
 banco |> 
@@ -14,10 +14,11 @@ banco |>
 hist(banco$log_ole)
 
 ## Scale
+## Scale returns a matrix; we have to inform that it's numeric
 
 banco |> 
   filter(!is.na(pitt_escore & !is.na(ole_escore) & !is.na(isi_escore))) |> 
-  mutate(norm_ole_escore = scale(ole_escore),
+  mutate(norm_ole_escore = scale(ole_escore),      ## norm_ole_escore = as.numeric(scale(ole_escore))
          norm_isi_escore = scale(isi_escore),
          norm_pitt_escore = scale(pitt_escore)
   ) -> banco
