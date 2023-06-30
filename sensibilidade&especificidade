@@ -1,0 +1,20 @@
+Prevalence, sensibility, specificity, PPV, and NPV
+
+###  Prevalence, sensitivity, sensibility, predictive positive and negative value
+
+
+#           Reference
+# predicted  Positive    Negative
+#
+#  Positive    A          B
+#  Negavitve   C          D
+
+#
+#
+# Sensitivity = A / (A / C)
+# Specificity = D / (B + D)
+# Prevalence (A + C) / (A + B + C + D)
+#
+# PPV = (Sensitivity * Prevalence) / ((Sensitivity * Prevalence) + ((1 - Specificity) * (1 - Prevalence)))
+#
+# NPV = (Specificity * (1 - Prevalence)) / (((1 - Sensitivity) * Prevalence) + ((Specificity) * (1 - Prevalence)))
