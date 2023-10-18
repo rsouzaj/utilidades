@@ -31,10 +31,10 @@ my_cut_fun <- function(x){
 #  Negative    C          D
 
 #
-# A = t_positive
-# B = f_positive
-# C = f_negative
-# D = t_negative
+# A = true_positive
+# B = false_positive
+# C = false_negative
+# D = true_negative
 #
 # Sensitivity = A / (A + C)
 # Specificity = D / (B + D)
