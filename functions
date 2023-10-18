@@ -20,3 +20,55 @@ my_cut_fun <- function(x){
   cut(x, breaks = seq(min(x, na.rm=T), max(x, na.rm=T)+2, by = 3), 
       include.lowest = T, right  = F, ordered_result = T)
 }
+
+# Function sensibility, specificity, PPV, PNV -----------------------------
+
+
+#           Reference
+# predicted  Positive    Negative
+#
+#  Positive    A          B
+#  Negative    C          D
+
+#
+# A = t_positive
+# B = f_positive
+# C = f_negative
+# D = t_negative
+#
+# Sensitivity = A / (A + C)
+# Specificity = D / (B + D)
+# Prevalence (A + C) / (A + B + C + D)
+#
+# PPV = (Sensitivity * Prevalence) / ((Sensitivity * Prevalence) + ((1 - Specificity) * (1 - Prevalence)))
+#
+# NPV = (Specificity * (1 - Prevalence)) / (((1 - Sensitivity) * Prevalence) + ((Specificity) * (1 - Prevalence)))
+
+
+
+table(df$pitt_cat, df$isi_cat)
+
+function_sen_spec_prev <-
+  function(A = t_positive,
+           B = f_positive,
+           C = f_negative,
+           D = t_negative) {
+    Prevalence = (A + C) / (A + B + C + D)
+    Sensitivity = A / (A + C)
+    round(Sensitivity * 100, digits = 1)
+    Specificity = D / (B + D)
+    PPV = (Sensitivity * Prevalence) / ((Sensitivity * Prevalence) + ((1 - Specificity) * (1 - Prevalence)))
+    NPV = (Specificity * (1 - Prevalence)) / (((1 - Sensitivity) * Prevalence) + ((Specificity) * (1 - Prevalence)))
+    # round( c(NPV, PPV, Prevalence, Sensitivity, Specificity)*100, digits = 1)
+    dplyr::tibble(
+      Sensitivity = round(Sensitivity * 100, digits = 1),
+      Specificity = round(Specificity * 100, digits = 1),
+      PPV = round(PPV * 100, digits = 1),
+      NPV = round(NPV * 100, digits = 1)
+    ) |>
+      xtable::xtable() |>
+      flextable::as_flextable(include.rownames = FALSE) |>
+      flextable::theme_booktabs()
+  }
+
+function_sen_spec_prev(78, 66, 0, 17)
