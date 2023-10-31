@@ -1,0 +1,31 @@
+## Cálculo para desfechos numéricos
+
+
+# Desfecho numérico -------------------------------------------------------
+
+
+
+# Definir parâmetros
+#
+alpha <- 0.05 # Nível de confiança (95%)
+
+power <- 0.80 # poder do teste
+
+effect_size <- 0.5   # Tamanho do efeito desejado
+
+standard_deviation <- 10
+
+# Calcule os valores críticos Z para o nível de confiança e o poder do teste
+#
+z_alpha <- qnorm(1 - (alpha / 2))
+
+z_beta <- qnorm(power)
+
+# Cálculo do tamanho da amostra
+
+sample_size <- (2 * ((z_alpha + z_beta) ^ 2)) * (alpha ^ 2) / (effect_size ^ 2)
+
+sample_size <- ceiling(sample_size)
+
+
+
