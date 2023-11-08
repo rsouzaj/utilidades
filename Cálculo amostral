@@ -23,7 +23,7 @@ z_beta <- qnorm(power)
 
 # Cálculo do tamanho da amostra
 
-sample_size <- (2 * ((z_alpha + z_beta) ^ 2)) * (alpha ^ 2) / (effect_size ^ 2)
+sample_size <- (2 * ((z_alpha + z_beta) ^ 2)) * (standard_deviation ^ 2) / (effect_size ^ 2)
 
 sample_size <- ceiling(sample_size)
 
