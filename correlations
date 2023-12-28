@@ -5,6 +5,11 @@ correl <- df %>%
 corrplot::corrplot(correl, method = 'circle')
 
 
-corrgram::corrgram(correl, 
-                   lower.panel = panel.pts, upper.panel= panel.conf, 
-                   diag.panel = panel.density)
+corrgram::corrgram(correl,upper.panel = corrgram::panel.cor,
+                   lower.panel = corrgram::panel.shade,
+                   diag.panel = corrgram::panel.density,
+                    # panel = corrgram::panel.ellipse ,
+                    gap= .3,
+                   cex.labels = 1
+                   
+                  )
