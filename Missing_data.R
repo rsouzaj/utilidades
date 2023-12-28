@@ -58,6 +58,7 @@ banco2$etnia = as.factor(banco2$etnia)
 
 my_imp = mice(banco2, m=5, method = c("pmm", "polyreg", "pmm", "pmm", "pmm"), maxit =20) ###métods tem que ser na mesma
 ##quantidade de colunas do banco de dados
+### pmm predictive mean matching
 ### loreg ( regressão logística) - usada somente para variáveis categóricas com duas respostas.
 ### polyreg ( regressão logística para mais de duas respotas)
 ### podemos usar um parâmetro para avaliar a média de distribuição. Vou usar o imc
