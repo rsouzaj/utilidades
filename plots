@@ -1,0 +1,150 @@
+
+# Save high resolution plot
+
+ggsave('fig_1.jpg', plot= last_plot(),  dpi = 300)
+
+## Plot stats (mean, median) in a boxplot
+
+df %>%
+  group_by(pelvic_pain_2, pbs_cat) %>%
+  summarise(pitt = pitt_score) %>%
+  ungroup() %>%
+  ggplot(aes(pelvic_pain_2, pitt, fill = pbs_cat)) +
+  geom_boxplot(position = 'dodge', width = 0.7, alpha = 0.5) +
+  stat_summary(
+    fun = 'median',
+    geom = 'text',
+    # colour = 'red',
+        aes(label = paste0("Median = ", after_stat(y))),
+    position = position_dodge(width = 0.7),
+    vjust = -0.5,
+    size = 3.1
+  )+
+  theme_classic()+
+  # scale_fill_brewer(palette = "BdGy")+  # "Dark2"; "Set2"; "Greys"; "Oranges"
+  scale_fill_manual(values = c(20724, 106))+
+  labs(
+    y = "PSQI score",
+    x = "Chronic Pelvic Pain",
+    fill = "",
+    size = 4
+  )
+
+               
+ ###  Violin
+ 
+ 
+df %>%
+  group_by(pelvic_pain_2, pbs_cat) %>%
+  summarise(pitt = pitt_score) %>%
+  ungroup() %>%
+  ggplot(aes(pelvic_pain_2, pitt, group = interaction(pelvic_pain_2, pbs_cat))) +
+  geom_violin(
+    position = 'dodge',
+    aes(fill = pbs_cat,),
+    alpha = 0.5,
+    width = 1
+  ) +
+  geom_boxplot(position = position_dodge(1),
+               width = 0.33,
+               fill = "white") +
+  stat_summary(
+    fun = 'median',
+    geom = 'text',
+    # colour = 'red',
+    aes(label = paste0("Median = ", after_stat(y))),
+    position = position_dodge(width = 1),
+    vjust = -1.5,
+    size = 3.5
+  ) +
+  theme_classic() +
+  theme(legend.position = 'top') +
+  scale_fill_manual(values = c(20724, 106)) +
+  labs(y = "PSQI score",
+       x = "Chronic Pelvic Pain",
+       fill = "",
+       size = 4) +
+  scale_fill_manual(values = c("#1d7874", "#f58c80"))
+  
+  
+  
+  # Multiples bar plots with text
+  
+  df_fim %>%
+  filter(!is.na(tipo_inc)& anterior == 'Sim') %>%
+  mutate(anterior = " ") %>%
+  ggplot(aes(anterior, fill = tipo_inc)) +
+  geom_bar(position = 'dodge')+
+  geom_text(stat = 'count', position = position_dodge(width = .9),
+            vjust= -.7,
+            aes( label=after_stat(count))) +
+  labs(
+    fill = 'Tipo de incontinência',
+    x = "Prolapso anterior",
+    y="Número de mulheres"
+  )+
+  theme_classic()+
+  theme(legend.position = 'none')-> anterior
+
+
+df_fim %>%
+  filter(!is.na(tipo_inc)& posterior == 'Sim') %>%
+  mutate(posterior = " ") %>%
+  ggplot(aes(posterior, fill = tipo_inc)) +
+  geom_bar(position = 'dodge')+
+  geom_text(stat = 'count', position = position_dodge(width = .9),
+            vjust= -.7,
+            aes( label=after_stat(count))) +
+  ylim(0,43)+
+  labs(
+    fill = "Tipo de incontinência",
+    x = "Prolapso posterior",
+    y=" "
+  )+
+  theme_classic()+
+  theme( axis.text.y=element_blank(),
+        axis.ticks = element_blank())-> posterior
+
+df_fim %>%
+  filter(!is.na(tipo_inc)& apical == 'Sim') %>%
+  mutate(apical = " ") %>%
+  ggplot(aes(apical, fill = tipo_inc)) +
+  geom_bar(position = 'dodge')+
+  geom_text(stat = 'count', position = position_dodge(width = .9),
+            vjust= -.7,
+            aes( label=after_stat(count))) +
+  ylim(0,43)+
+  labs(
+    fill = ' ',
+    x = "Prolapso apical",
+    y=" "
+  )+
+  theme_classic()+
+  theme(legend.position = 'none', axis.text.y=element_blank(),
+        axis.ticks = element_blank())-> apical
+
+library(patchwork)
+
+anterior+apical+posterior
+
+# Inserting text in a plot 
+geom_text(
+    aes(
+      label = paste0(
+        'R = ',
+        cor_p_i,
+        '[CI 95% = ',
+        ci_1,        # a calculated value from mutate
+        ' \u2013 ',  # Unicode for en dash
+                        # em dash: `\u2014`
+                        # en dash: `\u2013`
+        ci_2,
+        ']',
+        '; p-value < 0.001'
+      )
+    ),
+    x = 1.5,
+    y = -1.7,
+    size = 5,
+    family = "sans"
+  ) 

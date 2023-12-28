@@ -1,0 +1,10 @@
+correl <- df %>% 
+  select(where(is.numeric)) %>% 
+  cor(use = 'pairwise')
+
+corrplot::corrplot(correl, method = 'circle')
+
+
+corrgram::corrgram(correl, 
+                   lower.panel = panel.pts, upper.panel= panel.conf, 
+                   diag.panel = panel.density)

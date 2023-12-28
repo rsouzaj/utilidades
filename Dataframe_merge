@@ -1,0 +1,24 @@
+## Merging data frames by one ID repeated in all.
+
+list(df_1, df_2, df_5, df_6, df_7, df_8, df_9) %>% 
+  purrr::reduce(left_join, by = "record_id") %>% 
+  filter(!is.na(ole_cat))-> banco 
+
+## Merging dataframes with independent observations, without repeating IDs
+
+library("dplyr")                                    # Load dplyr package
+library("plyr")                                     # Load plyr package
+library("readr")                                    # Load readr package
+
+data_list <- list.files(path = ".",                 # creating a list with path
+                      pattern = "*22.csv",          # Type of file
+                      ignore.case = T)              
+
+
+all_data <- data_list %>%
+   lapply(read.csv2) %>%
+   lapply(function(x)                     # Apply a funtion to select columns from a list of data frames
+   {x <- x %>% select(-Valor.do.ISS, -Número.do.Endereço.do.Tomador) 
+   }
+   ) %>% 
+   purrr::reduce(full_join)

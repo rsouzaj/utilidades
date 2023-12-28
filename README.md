@@ -1,3 +1,7 @@
-# utilidades
+# códigos úteis
 
-Compilação de códigos que forma úteis no aprendizado.
+Compilação de códigos que foram úteis no aprendizado.
+
+# useful codes
+
+Code compilation with recurrent use.

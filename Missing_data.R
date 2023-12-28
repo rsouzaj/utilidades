@@ -30,6 +30,20 @@ banco$etnia = as.factor(banco$etnia)
 
 summary(banco)
 
+# Counting missin wiht aplly --------------------------------------------
+
+summary(df)
+
+## Missing pattern
+
+mice::md.pattern(df) # missing pattern
+
+# missing percent
+
+pMiss <- function(x){sum(is.na(x))/length(x)*100}
+
+apply(df, 2, pMiss)
+
 
 
 # Simple imputation -------------------------------------------------------
