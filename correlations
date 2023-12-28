@@ -4,6 +4,21 @@ correl <- df %>%
 
 corrplot::corrplot(correl, method = 'circle')
 
+corrplot::corrplot(cor(correl), method = 'number', type = "upper", 
+                                 tl.cex = .8, number.cex =.6,
+                                 # order = "hclust",
+                                 diag = FALSE, tl.pos = "lt", tl.offset = 0.5)
+  
+corrplot::corrplot.mixed(
+  correl,
+  lower = "circle",
+  upper = "number",
+  tl.cex = .8, number.cex =.6,
+  tl.pos = "lt",
+  diag = 'n'
+)
+
+
 
 corrgram::corrgram(correl,upper.panel = corrgram::panel.cor,
                    lower.panel = corrgram::panel.shade,
