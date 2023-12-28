@@ -31,7 +31,7 @@ df %>%
   )+
   theme_classic(base_size = 18, base_family = "Source Sans Pro")+
   guides(
-    size =
+    size =  guide_none()
   )
 
                
