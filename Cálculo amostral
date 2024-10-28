@@ -7,6 +7,7 @@
 
 # Definir parâmetros
 #
+
 alpha <- 0.05 # Nível de confiança (95%)
 
 power <- 0.80 # poder do teste
